@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -37,6 +39,58 @@ public class EmpresaServiceImpl implements EmpresaService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public EmpresaEntity obtenerEmpresaPorId(Long id) {
+        return empresaRepository.findById(id).orElseThrow(()->new NoSuchElementException("La empresa no existe"));
+    }
+
+    @Override
+    public List<EmpresaEntity> obtenerTodasLasEmpresas() {
+        return empresaRepository.findAll();
+    }
+
+    @Override
+    public EmpresaEntity actualizarEmpresa(Long id, EmpresaEntity empresa) {
+        EmpresaEntity empresaExistente = obtenerEmpresaPorId(id);
+        empresaExistente.setRazonSocial(empresa.getRazonSocial());
+        empresaExistente.setTipoDocumento(empresa.getTipoDocumento());
+        empresaExistente.setNumeroDocumento(empresa.getNumeroDocumento());
+        empresaExistente.setEstado(empresa.getEstado());
+        empresaExistente.setCondicion(empresa.getCondicion());
+        empresaExistente.setDireccion(empresa.getDireccion());
+        empresaExistente.setUbigeo(empresa.getUbigeo());
+        empresaExistente.setViaTipo(empresa.getViaTipo());
+        empresaExistente.setViaNombre(empresa.getViaNombre());
+        empresaExistente.setZonaCodigo(empresa.getZonaCodigo());
+        empresaExistente.setZonaTipo(empresa.getZonaTipo());
+        empresaExistente.setNumero(empresa.getNumero());
+        empresaExistente.setInterior(empresa.getInterior());
+        empresaExistente.setLote(empresa.getLote());
+        empresaExistente.setDpto(empresa.getDpto());
+        empresaExistente.setManzana(empresa.getManzana());
+        empresaExistente.setKilometro(empresa.getKilometro());
+        empresaExistente.setDistrito(empresa.getDistrito());
+        empresaExistente.setProvincia(empresa.getProvincia());
+        empresaExistente.setDepartamento(empresa.getDepartamento());
+        empresaExistente.setEsAgenteRetencion(empresa.isEsAgenteRetencion());
+        empresaExistente.setTipo(empresa.getTipo());
+        empresaExistente.setActividadEconomica(empresa.getActividadEconomica());
+        empresaExistente.setNumeroTrabajadores(empresa.getNumeroTrabajadores());
+        empresaExistente.setTipoFacturacion(empresa.getTipoFacturacion());
+        empresaExistente.setTipoContabilidad(empresa.getTipoContabilidad());
+        empresaExistente.setComercioExterior(empresa.getComercioExterior());
+        empresaExistente.setUserCreated(Constans.USER_CREATED);
+        empresaExistente.setDateCreated(new Timestamp(System.currentTimeMillis()));
+
+        return empresaRepository.save(empresaExistente);
+    }
+
+    @Override
+    public void eliminarEmpresa(Long id) {
+        EmpresaEntity empresaExistente = obtenerEmpresaPorId(id);
+        empresaRepository.delete(empresaExistente);
     }
 
     private EmpresaEntity getEntity(String ruc){
